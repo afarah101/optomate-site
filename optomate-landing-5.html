@@ -1,0 +1,891 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optomate — AI Automation for UK SMBs</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #080808;
+      --surface:       #0f0f0f;
+      --surface-2:     #141414;
+      --fg:            #f0f0f0;
+      --muted:         #888;
+      --border:        rgba(255,255,255,0.07);
+      --border-md:     rgba(255,255,255,0.12);
+      --accent:        #7c3aed;
+      --accent-hover:  #6d28d9;
+      --accent-dim:    rgba(124,58,237,0.14);
+      --accent-border: rgba(124,58,237,0.28);
+      --accent-label:  rgba(124,58,237,0.6);
+      --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', system-ui, sans-serif;
+      --font-mono: 'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+    .nav-logo-mark {
+      width: 26px;
+      height: 26px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--fg); }
+    .nav-cta { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .nav-book { font-size: 14px; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    .nav-book:hover { color: var(--fg); }
+    .nav-availability { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .nav-availability-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+      font-family: var(--font-sans);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-outline { background: transparent; color: var(--fg); border: 1px solid var(--border-md); }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 72px 0; }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent-label);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 0 72px;
+    }
+    .hero-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 1;
+    }
+    .hero > .container {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-content {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 6.5vw, 74px);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.04;
+      margin-bottom: 22px;
+      color: var(--fg);
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.62;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .hero-actions .btn { font-size: 15px; padding: 11px 22px; }
+    .hero-trust { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .hero-trust span { text-decoration: underline; text-decoration-color: rgba(255,255,255,0.2); text-underline-offset: 3px; }
+    .hero-trust-sub { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 32px; line-height: 1.4; }
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .stat-val { font-size: 28px; font-weight: 600; letter-spacing: -0.025em; }
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; max-width: 160px; line-height: 1.4; }
+
+    .ticker { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 0; overflow: hidden; }
+    .ticker-track { display: flex; gap: 40px; animation: scroll-ticker 30s linear infinite; white-space: nowrap; }
+    .ticker-item { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex-shrink: 0; }
+    .ticker-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    @keyframes scroll-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    .powered-strip { padding: 24px 0; border-bottom: 1px solid var(--border); }
+    .powered-label { text-align: center; font-size: 11px; color: rgba(255,255,255,0.28); font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+    .powered-row { display: flex; align-items: center; justify-content: center; gap: 44px; flex-wrap: wrap; }
+    .powered-item { display: flex; align-items: center; gap: 7px; opacity: 0.3; transition: opacity 0.2s; filter: grayscale(1); }
+    .powered-item:hover { opacity: 0.55; }
+    .powered-icon { width: 18px; height: 18px; flex-shrink: 0; }
+    .powered-name { font-size: 13px; font-weight: 500; color: #fff; letter-spacing: -0.01em; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 40px; }
+    .svc-card { background: var(--surface); padding: 32px; transition: background 0.2s; }
+    .svc-card:hover { background: var(--surface-2); }
+    .svc-icon { width: 36px; height: 36px; border: 1px solid var(--border-md); border-radius: 7px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; color: var(--muted); }
+    .svc-card h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 9px; }
+    .svc-card p { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 360px; }
+    .svc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .svc-tag { font-size: 11px; font-family: var(--font-mono); color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+
+    .process-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .process-header { max-width: 540px; margin-bottom: 44px; }
+    .process-header p { color: var(--muted); margin-top: 12px; font-size: 15px; line-height: 1.6; }
+    .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .process-step { background: var(--surface); padding: 24px 24px 28px; }
+    .process-step:hover { background: var(--surface-2); }
+    .step-num { font-family: var(--font-mono); font-size: 10px; color: var(--accent-label); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+    .process-step h3 { font-size: 15px; font-weight: 600; margin-bottom: 7px; }
+    .process-step p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    .pricing-intro { max-width: 520px; margin-bottom: 40px; }
+    .pricing-intro p { color: var(--muted); margin-top: 12px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .price-card { background: var(--surface); padding: 32px 26px; }
+    .price-card.featured { background: var(--surface-2); }
+    .price-badge { display: inline-block; font-size: 10px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent); background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 4px; padding: 2px 7px; margin-bottom: 14px; }
+    .price-tier { font-size: 13px; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+    .price-prefix { font-size: 16px; font-weight: 400; color: var(--muted); }
+    .price-amount { font-size: 40px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+    .price-amount-talk { font-size: 30px; font-weight: 600; letter-spacing: -0.025em; line-height: 1; margin-bottom: 4px; }
+    .price-period { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .price-reframe { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 20px; line-height: 1.4; }
+    .price-divider { height: 1px; background: var(--border); margin-bottom: 20px; }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+    .price-features li { font-size: 14px; color: var(--muted); display: flex; align-items: flex-start; gap: 9px; line-height: 1.45; }
+    .price-features li::before { content: '✓'; color: rgba(124,58,237,0.75); flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+    .price-cta { display: block; text-align: center; padding: 11px; border-radius: 7px; font-size: 14px; font-weight: 500; text-decoration: none; transition: all 0.15s; border: 1px solid var(--border-md); color: var(--fg); }
+    .price-cta:hover { background: rgba(255,255,255,0.05); }
+    .price-card.featured .price-cta { background: var(--accent); border-color: transparent; color: white; }
+    .price-card.featured .price-cta:hover { background: var(--accent-hover); }
+    .price-onboarding { text-align: center; font-size: 11px; color: var(--muted); margin-top: 10px; }
+    .pricing-urgency { text-align: center; margin-top: 18px; font-size: 13px; color: var(--muted); padding: 10px 16px; border: 1px solid var(--border); border-radius: 6px; background: rgba(124,58,237,0.04); }
+    .pricing-urgency strong { color: #e0d0ff; font-weight: 500; }
+    .pricing-footnote { text-align: center; margin-top: 14px; font-size: 13px; color: var(--muted); }
+    .pricing-footnote a { color: var(--accent); text-decoration: none; }
+    .pricing-footnote a:hover { text-decoration: underline; }
+
+    .testi-header { margin-bottom: 36px; }
+    .testi-header p { color: var(--muted); margin-top: 12px; max-width: 440px; }
+    .testi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .testi-card { background: var(--surface); padding: 28px; display: flex; flex-direction: column; }
+    .testi-outcome { display: inline-block; background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; border-radius: 20px; padding: 3px 10px; margin-bottom: 14px; align-self: flex-start; }
+    .testi-quote { font-size: 15px; line-height: 1.68; color: #c8c8c8; margin-bottom: 22px; flex: 1; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); border: 1px solid var(--accent-border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #a78bfa; flex-shrink: 0; }
+    .testi-name { font-size: 14px; font-weight: 500; }
+    .testi-role { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    .faq-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .faq-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 72px; align-items: start; }
+    .faq-sidebar h2 { margin-bottom: 12px; }
+    .faq-sidebar p { color: var(--muted); font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+    .faq-accordion { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { width: 100%; background: none; border: none; color: var(--fg); font-family: var(--font-sans); font-size: 14px; font-weight: 500; text-align: left; padding: 17px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: background 0.15s; }
+    .faq-q:hover { background: rgba(255,255,255,0.025); }
+    .faq-toggle { flex-shrink: 0; width: 20px; height: 20px; border: 1px solid var(--border-md); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); transition: all 0.15s; line-height: 1; }
+    .faq-item.open .faq-toggle { background: var(--accent-dim); border-color: var(--accent-border); color: #a78bfa; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.28s ease; }
+    .faq-a-inner { padding: 0 20px 16px; font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    .cta-section { text-align: center; padding: 88px 0; }
+    .cta-inner { max-width: 560px; margin: 0 auto; }
+    .cta-section h2 { font-size: clamp(30px, 5vw, 54px); letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 16px; }
+    .cta-section p { color: var(--muted); font-size: 16px; line-height: 1.6; margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .cta-btns .btn { font-size: 15px; padding: 12px 26px; }
+    .cta-sub { margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.32); }
+
+    .contact-section { padding: 72px 0; border-top: 1px solid var(--border); }
+    .contact-header { max-width: 520px; margin-bottom: 40px; }
+    .contact-header p { color: var(--muted); margin-top: 12px; font-size: 15px; }
+    .contact-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 32px; }
+    .contact-card { background: var(--surface); padding: 24px 28px; display: flex; align-items: center; gap: 14px; }
+    .contact-card:hover { background: var(--surface-2); }
+    .contact-card-icon { width: 38px; height: 38px; border: 1px solid var(--border-md); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); flex-shrink: 0; }
+    .contact-card-label { font-size: 11px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+    .contact-card-value { font-size: 15px; font-weight: 500; color: var(--fg); }
+    .contact-card-value a { color: var(--fg); text-decoration: none; }
+    .contact-card-value a:hover { color: #a78bfa; }
+    .contact-book { margin-bottom: 32px; }
+    .contact-book p { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+    .contact-form-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 36px; }
+    .contact-form-title { font-size: 16px; font-weight: 600; margin-bottom: 24px; line-height: 1.4; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .form-group input,
+    .form-group textarea {
+      background: var(--bg);
+      border: 1px solid var(--border-md);
+      border-radius: 7px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--fg);
+      font-family: var(--font-sans);
+      transition: border-color 0.15s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--accent); }
+    .form-group textarea { min-height: 110px; resize: vertical; }
+    .form-checkboxes { margin-bottom: 16px; }
+    .form-checkboxes label.group-label { font-size: 13px; color: var(--muted); font-weight: 500; display: block; margin-bottom: 10px; }
+    .form-checkbox-options { display: flex; flex-direction: column; gap: 8px; }
+    .form-checkbox-item { display: flex; align-items: center; gap: 9px; cursor: pointer; }
+    .form-checkbox-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+    .form-checkbox-item span { font-size: 14px; color: var(--muted); }
+    .form-submit { background: var(--accent); color: white; border: none; border-radius: 7px; padding: 11px 24px; font-size: 14px; font-weight: 500; font-family: var(--font-sans); cursor: pointer; transition: background 0.15s; }
+    .form-submit:hover { background: var(--accent-hover); }
+    .form-success { display: none; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 7px; padding: 16px 20px; font-size: 14px; color: #c4b5fd; margin-top: 16px; }
+
+    footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 36px; }
+    .footer-brand-desc { font-size: 14px; color: var(--muted); margin-top: 10px; max-width: 280px; line-height: 1.6; }
+    .footer-col h4 { font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: var(--fg); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; border-top: 1px solid var(--border); gap: 16px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 13px; color: var(--muted); }
+
+    .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.44s ease, transform 0.44s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in.delay-1 { transition-delay: 0.08s; }
+    .fade-in.delay-2 { transition-delay: 0.16s; }
+
+    @media (max-width: 1024px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-availability { display: none; }
+    }
+    @media (max-width: 800px) {
+      .faq-layout { grid-template-columns: 1fr; gap: 36px; }
+      .contact-cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      section { padding: 52px 0; }
+      .hero { padding: 72px 0 56px; }
+      .nav-links { display: none; }
+      .nav-book { display: none; }
+      .nav-availability { display: none; }
+      .hero-stats { gap: 24px; }
+      .process-steps { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .contact-form-wrap { padding: 24px; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      <div class="nav-logo-mark">O</div>
+      Optomate
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-cta">
+      <div class="nav-availability">
+        <span class="nav-availability-dot"></span>
+        2 spots open this month
+      </div>
+      <a href="#contact" class="nav-book">Book a call</a>
+      <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="btn btn-primary">See if we're a fit →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <video class="hero-video" autoplay loop muted playsinline>
+    <source src="moz33xcm-b_f_a_c_bc_f_efc_da_video_mp_.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="hero-content">
+      <h1>Stop Losing Hours<br>to Work Software<br>Should Handle.</h1>
+      <p class="hero-sub">We build automation systems for businesses that are done doing things manually.</p>
+      <div class="hero-actions">
+        <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="btn btn-primary">See if we're a fit →</a>
+        <a href="#process" class="btn btn-outline">See how it works</a>
+      </div>
+      <p class="hero-trust">Trusted by <span>40+ UK businesses</span></p>
+      <p class="hero-trust-sub">Used by law firms, contractors, e-commerce brands and accountancy practices across the UK and US.</p>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-val">72hrs</div>
+          <div class="stat-label">Typical time to first live workflow</div>
+        </div>
+        <div>
+          <div class="stat-val">150+</div>
+          <div class="stat-label">Workflows automated to date</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="ticker-dot"></span>Invoice processing</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Lead follow-up sequences</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>CRM data entry</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Client onboarding</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Appointment scheduling</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Quote generation</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Inventory updates</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Report compilation</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Support ticket triage</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Contract management</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Invoice processing</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Lead follow-up sequences</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>CRM data entry</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Client onboarding</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Appointment scheduling</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Quote generation</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Inventory updates</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Report compilation</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Support ticket triage</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Contract management</span>
+  </div>
+</div>
+
+<div class="powered-strip">
+  <div class="container">
+    <p class="powered-label">Powered by</p>
+    <div class="powered-row">
+      <div class="powered-item">
+        <svg class="powered-icon" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2C5.13 2 2 5.13 2 9s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 12.5c-3.03 0-5.5-2.47-5.5-5.5S5.97 3.5 9 3.5s5.5 2.47 5.5 5.5-2.47 5.5-5.5 5.5z" fill="white"/>
+          <circle cx="9" cy="9" r="2.5" fill="white"/>
+        </svg>
+        <span class="powered-name">Claude</span>
+      </div>
+      <div class="powered-item">
+        <svg class="powered-icon" viewBox="0 0 18 18" fill="none">
+          <rect x="2" y="2" width="14" height="14" rx="3" stroke="white" stroke-width="1.4"/>
+          <path d="M5.5 9h7M9 5.5v7" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span class="powered-name">ChatGPT</span>
+      </div>
+      <div class="powered-item">
+        <svg class="powered-icon" viewBox="0 0 18 18" fill="none">
+          <polygon points="9,2 16,14 2,14" stroke="white" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+          <circle cx="9" cy="11" r="1.5" fill="white"/>
+        </svg>
+        <span class="powered-name">Gemini</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="services">
+  <div class="container">
+    <div class="section-label fade-in">Services</div>
+    <h2 class="fade-in delay-1">If you've ever thought 'there must be a better way to do this' — there is.</h2>
+    <div class="services-grid fade-in delay-2">
+      <div class="svc-card">
+        <div class="svc-icon"><svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M8 1v3M8 12v3M1 8h3M12 8h3M3.05 3.05l2.12 2.12M10.83 10.83l2.12 2.12M3.05 12.95l2.12-2.12M10.83 5.17l2.12-2.12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <h3>Workflow Automation</h3>
+        <p>Connect your existing tools and eliminate the manual steps in between. From invoice processing to client onboarding — if it's repeatable, we automate it.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Zapier</span><span class="svc-tag">Make</span><span class="svc-tag">n8n</span><span class="svc-tag">Custom API</span><span class="svc-tag">Webhooks</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/><path d="M5 8h6M8 5v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+        <h3>AI Assistants</h3>
+        <p>Custom-built AI automated systems trained on your business — for your team or your clients. They answer questions, process requests, draft documents, and take action in your systems.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">GPT-4o</span><span class="svc-tag">Claude</span><span class="svc-tag">RAG</span><span class="svc-tag">Custom fine-tune</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M2 12L7 7l3 3 4-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Sales Automation</h3>
+        <p>Your CRM updates itself. Leads are scored and routed automatically. Follow-ups go out on time, every time. Your salespeople focus on closing, not data entry.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">HubSpot</span><span class="svc-tag">Pipedrive</span><span class="svc-tag">Email sequences</span><span class="svc-tag">Lead scoring</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon"><svg width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/></svg></div>
+        <h3>Custom Systems</h3>
+        <p>When off-the-shelf tools don't fit your process, we build something that does. Internal dashboards, client portals, and bespoke tools built around how your business actually works.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Airtable</span><span class="svc-tag">Notion</span><span class="svc-tag">Custom web app</span><span class="svc-tag">API integration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="process-section">
+  <div class="container">
+    <div class="process-header fade-in">
+      <div class="section-label">How it works</div>
+      <h2>From first call to live<br>automation in days</h2>
+      <p>No 12-week consulting engagements. No bloated retainers. We move fast and show you something real early.</p>
+    </div>
+    <div class="process-steps fade-in delay-1">
+      <div class="process-step">
+        <div class="step-num">01 — Discovery</div>
+        <h3>Map your workflows</h3>
+        <p>A 45-minute call to understand your current processes, where the bottlenecks are, and which automation has the highest impact first.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02 — Build</div>
+        <h3>We build it</h3>
+        <p>Our team designs and deploys your automation. The first workflow is typically live within 72 hours of the kickoff call.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03 — Test</div>
+        <h3>Run in parallel</h3>
+        <p>New automation runs alongside your existing process. You can see exactly what it's doing before switching over fully. No risk.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04 — Scale</div>
+        <h3>Expand and optimise</h3>
+        <p>Once the first workflow is solid, we move to the next. Most clients automate 3–5 processes in the first 90 days.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="pricing-intro fade-in">
+      <div class="section-label">Pricing</div>
+      <h2>Straightforward pricing.<br>No surprises.</h2>
+      <p>Fixed monthly retainers. Cancel anytime. All plans include onboarding, ongoing support, and continuous improvement.</p>
+    </div>
+    <div class="pricing-grid fade-in delay-1">
+      <div class="price-card">
+        <div class="price-tier">Starter</div>
+        <div class="price-amount"><span class="price-prefix">From </span>£799</div>
+        <div class="price-period">per month + VAT</div>
+        <p class="price-reframe">Less than one hour of a consultant's time per month.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>1 core automation workflow</li>
+          <li>Up to 3 tool integrations</li>
+          <li>Monthly strategy call</li>
+          <li>Email support (2-day response)</li>
+          <li>Monthly performance report</li>
+        </ul>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Best for teams of 1–10</p>
+        <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="price-cta">Get started</a>
+        <p class="price-onboarding">Next available onboarding: 19 May</p>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Most popular</div>
+        <div class="price-tier">Growth</div>
+        <div class="price-amount"><span class="price-prefix">From </span>£1,999</div>
+        <div class="price-period">per month + VAT</div>
+        <p class="price-reframe">Roughly the cost of one part-time hire — without the HR.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Up to 5 active workflows</li>
+          <li>Unlimited integrations</li>
+          <li>1 custom AI assistant</li>
+          <li>Bi-weekly strategy calls</li>
+          <li>Priority support (same-day)</li>
+        </ul>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Best for teams of 10–50</p>
+        <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="price-cta">Get started</a>
+        <p class="price-onboarding">Next available onboarding: 19 May</p>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Scale</div>
+        <div class="price-amount-talk">Let's talk</div>
+        <div class="price-period">custom engagement</div>
+        <p class="price-reframe">Custom — let's talk about what it's worth to your business.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Unlimited workflows</li>
+          <li>Multiple AI assistants</li>
+          <li>Custom systems &amp; portals</li>
+          <li>Dedicated account manager</li>
+          <li>Weekly calls + Slack access</li>
+        </ul>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:16px;">Best for teams of 50+</p>
+        <a href="#contact" class="price-cta">Book a call</a>
+        <p class="price-onboarding">Next available onboarding: 19 May</p>
+      </div>
+    </div>
+    <div class="pricing-urgency fade-in delay-2">
+      We take on <strong>3 new clients per month</strong>. Currently <strong>1 spot remaining</strong>.
+    </div>
+    <p class="pricing-footnote">Not sure which plan fits? <a href="#contact">Book a free 30-min call</a> — we'll tell you honestly.</p>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="container">
+    <div class="testi-header fade-in">
+      <div class="section-label">Testimonials</div>
+      <h2>What clients say</h2>
+      <p>UK businesses that stopped doing the same work twice.</p>
+    </div>
+    <div class="testi-grid fade-in delay-1">
+      <div class="testi-card">
+        <span class="testi-outcome">8 hrs/week saved on rota &amp; compliance admin</span>
+        <p class="testi-quote">"We were drowning in rota changes and incident report paperwork — it never stopped. The Optomate team came in, had a proper look at how we worked, and built something that handles it all automatically. Honestly, I didn't think it was possible. The team actually has time to focus on the people we care for now."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">IN</div>
+          <div><div class="testi-name">Ibrahim N.</div><div class="testi-role">Manager, Better Life Care — Healthcare</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <span class="testi-outcome">Zero missed customer updates — fully automated</span>
+        <p class="testi-quote">"We were updating customers manually for every single delivery — texts, emails, status changes, all done by hand. It was taking hours and things still slipped through. Optomate built a system that handles all of it the moment something moves. Customers are happier and we're not firefighting anymore."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AM</div>
+          <div><div class="testi-name">Abdi M.</div><div class="testi-role">Delivery Manager — Logistics</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <span class="testi-outcome">Compliance chasing eliminated — audit-ready automatically</span>
+        <p class="testi-quote">"Chasing the team for security sign-offs, policy acknowledgements and access reviews was a full-time job on top of my actual job. Optomate automated the whole cycle — reminders go out, responses get tracked, reports generate themselves. We walked into our last audit completely prepared without me lifting a finger."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AL</div>
+          <div><div class="testi-name">Ashley L.</div><div class="testi-role">Information Security Manager — Tech &amp; InfoSec</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <span class="testi-outcome">IT onboarding cut from 4 hours to 20 minutes per new hire</span>
+        <p class="testi-quote">"Every new hire meant hours of manual work across four different systems — accounts, access, tickets, comms. It was chaos and something always got missed. Optomate built us an onboarding workflow that kicks off automatically the moment HR confirms a start date. It's one of those things where you wonder why you didn't do it sooner."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AH</div>
+          <div><div class="testi-name">Abdul H.</div><div class="testi-role">IT Director — Enterprise Technology</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="faq-section">
+  <div class="container">
+    <div class="faq-layout fade-in">
+      <div class="faq-sidebar">
+        <div class="section-label">FAQ</div>
+        <h2>Common questions</h2>
+        <p>Straight answers. If something's missing, book a call and we'll cover it.</p>
+        <a href="#contact" class="btn btn-outline">Book a call →</a>
+      </div>
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How long does it take to go live?<span class="faq-toggle">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">For most clients, the first automated workflow is live within 72 hours of our discovery call. More complex multi-system automations typically take one to two weeks. We'll give you a clear timeline before we start.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How much of my time does this actually take?<span class="faq-toggle">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">You give us 45 minutes upfront to walk us through how your business works. After that, we handle everything. Most clients spend less than 30 minutes a month reviewing results.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Do I need a technical team or IT knowledge?<span class="faq-toggle">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">No. We handle everything technical. You describe how your business works; we design and build the automation. The majority of our clients have no in-house tech team — that's precisely why they work with us.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Can you work with our existing tools?<span class="faq-toggle">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Almost certainly. We integrate with over 200 platforms — HubSpot, Xero, Salesforce, Shopify, Airtable, Google Workspace, Microsoft 365, and hundreds more. If you use something unusual, we'll check before we commit.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What happens if something breaks or needs changing?<span class="faq-toggle">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">We monitor all active automations and fix issues as part of your retainer. If a connected tool updates its API or a workflow stops behaving correctly, we handle it — no extra charge. You're not on your own once it's built.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Is there a minimum contract length?<span class="faq-toggle">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">No minimum contract. We work month-to-month. In practice, clients stay because the automation is genuinely saving them time — not because they're locked in. We'd rather earn your business every month.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What industries do you work with?<span class="faq-toggle">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Primarily UK SMBs in professional services (law, finance, consulting, recruitment), e-commerce, and trades (construction, electrical, property). If you run a business with repetitive admin or operational processes, we can almost certainly help.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner fade-in">
+      <div class="section-label">Get started</div>
+      <h2>Ready to stop doing<br>work software can do?</h2>
+      <p>We'll look at your current workflows, identify the highest-impact automation opportunities, and give you a clear picture of what's possible — no obligation.</p>
+      <div class="cta-btns">
+        <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="btn btn-primary">See if we're a fit →</a>
+      </div>
+      <p class="cta-sub">30 minutes. No pitch. Just a clear picture of what's possible.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="contact-header fade-in">
+      <div class="section-label">Contact</div>
+      <h2>Get in touch</h2>
+      <p>No hard sell. Tell us what's frustrating you — we'll tell you honestly if we can help.</p>
+    </div>
+    <div class="contact-cards fade-in delay-1">
+      <div class="contact-card">
+        <div class="contact-card-icon">
+          <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M1 5l7 5 7-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="contact-card-label">Email</div>
+          <div class="contact-card-value"><a href="mailto:admin@optomate.co.uk">admin@optomate.co.uk</a></div>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-icon">
+          <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M3 1h3l1.5 4-2 1.2a9.1 9.1 0 004.3 4.3L11 8.5l4 1.5v3a1 1 0 01-1 1C5.4 14 2 8.6 2 2a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="contact-card-label">Phone</div>
+          <div class="contact-card-value"><a href="tel:+447939005274">+44 7939 005274</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-book fade-in delay-1">
+      <p>Prefer to speak directly?</p>
+      <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="btn btn-outline">Book a call →</a>
+    </div>
+    <div class="contact-form-wrap fade-in delay-2">
+      <div class="contact-form-title">Tell us what's eating your time — we'll tell you what to automate first. Free.</div>
+      <form id="contactForm" method="POST" action="https://formspree.io/f/YOUR_FORM_ID">
+        <input type="hidden" name="_replyto" value="admin@optomate.co.uk">
+        <input type="hidden" name="_subject" value="New enquiry — Optomate website">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" name="firstName" autocomplete="given-name" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input type="text" id="lastName" name="lastName" autocomplete="family-name" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel">
+          </div>
+        </div>
+        <div class="form-checkboxes">
+          <label class="group-label">What's taking the most time right now?</label>
+          <div class="form-checkbox-options">
+            <label class="form-checkbox-item"><input type="checkbox" name="pain_points" value="Admin & data entry"><span>Admin &amp; data entry</span></label>
+            <label class="form-checkbox-item"><input type="checkbox" name="pain_points" value="Lead follow-up"><span>Lead follow-up</span></label>
+            <label class="form-checkbox-item"><input type="checkbox" name="pain_points" value="Reporting & spreadsheets"><span>Reporting &amp; spreadsheets</span></label>
+            <label class="form-checkbox-item"><input type="checkbox" name="pain_points" value="Client onboarding"><span>Client onboarding</span></label>
+            <label class="form-checkbox-item"><input type="checkbox" name="pain_points" value="Something else"><span>Something else</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell us briefly what you're looking to automate…" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">Submit →</button>
+      </form>
+      <div class="form-success" id="formSuccess">
+        Thanks — we'll be in touch within one business day.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="nav-logo" href="#">
+          <div class="nav-logo-mark">O</div>
+          Optomate
+        </a>
+        <p class="footer-brand-desc">We build automation systems for businesses that are done doing things manually.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul class="footer-links">
+          <li><a href="#services">Workflow Automation</a></li>
+          <li><a href="#services">AI Assistants</a></li>
+          <li><a href="#services">Sales Automation</a></li>
+          <li><a href="#services">Custom Systems</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul class="footer-links">
+          <li><a href="#process">How it works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#testimonials">Client stories</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><a href="mailto:admin@optomate.co.uk">admin@optomate.co.uk</a></li>
+          <li><a href="tel:+447939005274">+44 7939 005274</a></li>
+          <li><a href="#contact">Book a call</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Optomate. All rights reserved.</p>
+      <p style="color:var(--muted)">Privacy policy · Terms</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const ans = item.querySelector('.faq-a');
+    const tog = btn.querySelector('.faq-toggle');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-a').style.maxHeight = '0';
+      el.querySelector('.faq-toggle').textContent = '+';
+    });
+    if (!wasOpen) {
+      item.classList.add('open');
+      ans.style.maxHeight = ans.scrollHeight + 'px';
+      tog.textContent = '−';
+    }
+  }
+
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const data = new FormData(contactForm);
+      fetch(contactForm.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(() => {
+        contactForm.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      }).catch(() => {
+        contactForm.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      });
+    });
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
