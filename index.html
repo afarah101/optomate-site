@@ -333,6 +333,14 @@
     .form-checkbox-item span { font-size: 14px; color: var(--muted); }
     .form-submit { background: var(--accent); color: white; border: none; border-radius: 7px; padding: 11px 24px; font-size: 14px; font-weight: 500; font-family: var(--font-sans); cursor: pointer; transition: background 0.15s; }
     .form-submit:hover { background: var(--accent-hover); }
+    .form-consent { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 16px; cursor: pointer; }
+    .form-consent input[type="checkbox"] { width: 15px; height: 15px; margin-top: 2px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+    .form-consent span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .form-consent a { color: #a78bfa; text-decoration: underline; }
+    .form-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+    #turnstileWidget { margin-bottom: 16px; min-height: 65px; }
+    .form-submit:disabled { opacity: 0.6; cursor: wait; }
+    .form-error { display: none; background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.30); border-radius: 7px; padding: 16px 20px; font-size: 14px; color: #fca5a5; margin-top: 16px; }
     .form-success { display: none; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 7px; padding: 16px 20px; font-size: 14px; color: #c4b5fd; margin-top: 16px; }
 
     footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
@@ -760,7 +768,7 @@
     <div class="contact-form-wrap fade-in delay-2">
       <div class="contact-form-title">Get your free automation roadmap</div>
       <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6;">Tick what's eating your time below. I'll personally analyze your workflow and send you a custom automation plan to reclaim your hours.</p>
-      <form id="contactForm" method="POST" action="https://formspree.io/f/YOUR_FORM_ID">
+      <form id="contactForm" method="POST" action="/api/audit">
         <input type="hidden" name="_replyto" value="admin@optomate.co.uk">
         <input type="hidden" name="_subject" value="New enquiry — Optomate website">
         <div class="form-row">
@@ -783,6 +791,20 @@
             <input type="tel" id="phone" name="phone" autocomplete="tel">
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="business">Business name</label>
+            <input type="text" id="business" name="business" autocomplete="organization" maxlength="300" required>
+          </div>
+          <div class="form-group">
+            <label for="url">Business website</label>
+            <input type="url" id="url" name="url" autocomplete="url" placeholder="https://" maxlength="300" required>
+          </div>
+        </div>
+        <div class="form-hp" aria-hidden="true">
+          <label for="company_website">Leave this empty</label>
+          <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off">
+        </div>
         <div class="form-checkboxes">
           <label class="group-label">What's taking the most time right now?</label>
           <div class="form-checkbox-options">
@@ -795,12 +817,15 @@
         </div>
         <div class="form-group">
           <label for="message">Message</label>
-          <textarea id="message" name="message" placeholder="Tell us briefly what you're looking to automate…" required></textarea>
+          <textarea id="message" name="message" placeholder="Tell us briefly what you're looking to automate…" maxlength="300" required></textarea>
         </div>
+        <label class="form-consent"><input type="checkbox" id="consent" name="consent" required><span>I agree Optomate may use these details to prepare my free audit. See our <a href="/privacy" target="_blank" rel="noopener">privacy policy</a>.</span></label>
+        <div id="turnstileWidget"></div>
         <button type="submit" class="form-submit">Send my free analysis →</button>
       </form>
+      <div class="form-error" id="formError" role="alert">Something went wrong. Please email <a href="mailto:admin@optomate.co.uk" style="color:#fca5a5;text-decoration:underline;">admin@optomate.co.uk</a>.</div>
       <div class="form-success" id="formSuccess">
-        Thanks! Your analysis is on the way. Want to skip the wait? <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" style="color:#a78bfa;text-decoration:underline;">Book your discovery call here</a>
+        Thanks. Your free audit is being prepared. We will email you within 1 working day. Want to skip the wait? <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" style="color:#a78bfa;text-decoration:underline;">Book your discovery call here</a>
       </div>
     </div>
   </div>
@@ -869,20 +894,44 @@
   }
 
   const contactForm = document.getElementById('contactForm');
+  let turnstileId = null;
+  // Turnstile site key is public; it is served by /api/audit because this page has no build step.
+  window.onTurnstileLoad = function() {
+    fetch('/api/audit').then(r => r.json()).then(d => {
+      if (d.siteKey) turnstileId = turnstile.render('#turnstileWidget', { sitekey: d.siteKey, theme: 'dark' });
+    }).catch(() => {});
+  };
   if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
       e.preventDefault();
+      const btn = contactForm.querySelector('.form-submit');
+      const errorBox = document.getElementById('formError');
       const data = new FormData(contactForm);
-      fetch(contactForm.action, {
+      const body = {
+        firstName: data.get('firstName'), lastName: data.get('lastName'), email: data.get('email'),
+        phone: data.get('phone'), business: data.get('business'), url: data.get('url'),
+        pain_points: data.getAll('pain_points'), message: data.get('message'),
+        consent: document.getElementById('consent').checked,
+        company_website: data.get('company_website'),
+        'cf-turnstile-response': data.get('cf-turnstile-response') || ''
+      };
+      const label = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      errorBox.style.display = 'none';
+      fetch('/api/audit', {
         method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      }).then(() => {
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+      }).then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
         contactForm.style.display = 'none';
         document.getElementById('formSuccess').style.display = 'block';
       }).catch(() => {
-        contactForm.style.display = 'none';
-        document.getElementById('formSuccess').style.display = 'block';
+        errorBox.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = label;
+        if (window.turnstile && turnstileId !== null) turnstile.reset(turnstileId);
       });
     });
   }
@@ -895,5 +944,6 @@
   document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
 </script>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
 </body>
 </html>
