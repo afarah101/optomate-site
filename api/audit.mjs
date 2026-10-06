@@ -7,6 +7,7 @@ const SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverif
 const ALLOWED_HOSTNAMES = ['www.optomate.co.uk', 'optomate.co.uk'];
 const PAIN_POINTS = ['Admin & data entry', 'Lead follow-up', 'Reporting & spreadsheets', 'Client onboarding', 'Something else'];
 const MAX = 300;
+const ONE_URL_MSG = 'Please enter one website address, for example https://yourbusiness.co.uk';
 const EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
 
 const json = (status, body) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
@@ -25,6 +26,8 @@ export async function verifyTurnstile(token, ip, env = process.env, fetchImpl = 
   }
 }
 
+export { ONE_URL_MSG };
+
 export function validate(b) {
   const first = str(b.firstName), last = str(b.lastName);
   const fields = {
@@ -39,6 +42,10 @@ export function validate(b) {
   }
   if (!fields.business) return { error: 'Business name is required.' };
   if (!EMAIL_RE.test(fields.email)) return { error: 'Please enter a valid email address.' };
+  // One website only: no spaces and no second address (e.g. "https://a.co.uk or https://b.co.uk").
+  if (/\s/.test(fields.url) || (fields.url.match(/https?:\/\//gi) || []).length > 1) {
+    return { error: ONE_URL_MSG, code: 'one_url' };
+  }
   let u;
   try { u = new URL(fields.url); } catch { u = null; }
   if (!u || !['http:', 'https:'].includes(u.protocol) || !u.hostname.includes('.')) {
@@ -70,7 +77,7 @@ export async function handlePost(request, env = process.env, fetchImpl = fetch) 
   if (str(b.company_website)) return json(200, { ok: true });
   // 3) Validate.
   const v = validate(b);
-  if (v.error) return json(400, { error: v.error });
+  if (v.error) return json(400, v.code ? { error: v.error, code: v.code } : { error: v.error });
   // 4) Dispatch to the audit agent.
   try {
     const r = await fetchImpl(DISPATCH_URL, {
