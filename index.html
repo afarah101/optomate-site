@@ -195,8 +195,6 @@
     .nav-links a { display: block; padding: 8px 14px; border-radius: var(--r-pill); font-size: 14px; color: var(--muted); text-decoration: none; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
     .nav-links a:hover { color: var(--fg); background: var(--accent-soft); }
     .nav-cta { display: flex; align-items: center; gap: 14px; }
-    .nav-availability { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); white-space: nowrap; }
-    .nav-availability-dot { width: 7px; height: 7px; border-radius: var(--r-pill); background: var(--accent); }
     .nav .btn { font-size: 14px; padding: 6px 6px 6px 18px; }
     .nav .btn-icon { width: 28px; height: 28px; }
 
@@ -310,13 +308,11 @@
     }
     .price-cta:hover { background: var(--bg); }
     .price-cta:active { transform: scale(0.98); }
-    .price-onboarding { text-align: center; font-size: 12px; color: var(--muted); margin-top: 12px; }
     .price-card.featured .price-tier,
     .price-card.featured .price-prefix,
     .price-card.featured .price-period,
     .price-card.featured .price-reframe,
-    .price-card.featured .price-fit,
-    .price-card.featured .price-onboarding { color: var(--on-dark-muted); }
+    .price-card.featured .price-fit { color: var(--on-dark-muted); }
     .price-card.featured .price-amount { font-weight: 500; }
     .price-card.featured .price-features { border-top-color: var(--on-dark-line); }
     .price-card.featured .price-features li { font-weight: 500; }
@@ -496,7 +492,6 @@
       .hero-stats { gap: 32px; margin-top: 48px; }
       .hero-media { margin-top: 48px; }
       .hero-media .bezel-core { aspect-ratio: 4 / 3; }
-      .nav-availability { display: none; }
       .services-grid, .process-steps, .testi-grid, .form-row, .footer-grid { grid-template-columns: 1fr; }
       .svc-card, .testi-card { padding: 28px; }
       .svc-card.wide h3, .svc-card h3 { font-size: 26px; }
@@ -531,10 +526,6 @@
       <li><a href="#faq">FAQ</a></li>
     </ul>
     <div class="nav-cta">
-      <div class="nav-availability">
-        <span class="nav-availability-dot" aria-hidden="true"></span>
-        [NUMBER] spots open this month
-      </div>
       <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="btn btn-primary">Book a call <span class="btn-icon" aria-hidden="true">→</span></a>
     </div>
   </div>
@@ -722,7 +713,6 @@
         </ul>
         <p class="price-fit">Best for teams of 1–10</p>
         <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="price-cta">Get started</a>
-        <p class="price-onboarding">Next available onboarding: [DATE]</p>
       </div>
       <div class="price-card featured reveal delay-1">
         <div class="price-head"><div class="price-tier">Growth</div><div class="price-badge">Most popular</div></div>
@@ -738,7 +728,6 @@
         </ul>
         <p class="price-fit">Best for teams of 10–50</p>
         <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="price-cta">Get started</a>
-        <p class="price-onboarding">Next available onboarding: [DATE]</p>
       </div>
       <div class="price-card reveal delay-2">
         <div class="price-head"><div class="price-tier">Scale</div></div>
@@ -754,10 +743,9 @@
         </ul>
         <p class="price-fit">Best for teams of 50+</p>
         <a href="#contact" class="price-cta">Book a call</a>
-        <p class="price-onboarding">Next available onboarding: [DATE]</p>
       </div>
     </div>
-    <p class="pricing-urgency reveal">We take on <strong>3 new clients per month</strong>. Currently <strong>[NUMBER] spots remaining</strong>.</p>
+    <p class="pricing-urgency reveal">We take on <strong>3 new clients per month</strong>.</p>
     <p class="pricing-footnote">Not sure which plan fits? <a href="#contact">Book a free 30-min call</a>. We'll tell you honestly.</p>
   </div>
 </section>
@@ -772,7 +760,7 @@
     <div class="testi-grid">
       <figure class="testi-card reveal">
         <p class="testi-outcome">8 hrs/week saved on rota &amp; compliance admin</p>
-        <blockquote class="testi-quote">"We were drowning in rota changes and incident report paperwork. It never stopped. The Optomate team came in, had a proper look at how we worked, and built something that handles it all automatically. Honestly, I didn't think it was possible. The team actually has time to focus on the people we care for now."</blockquote>
+        <blockquote class="testi-quote">"We were drowning in rota changes and incident report paperwork — it never stopped. The Optomate team came in, had a proper look at how we worked, and built something that handles it all automatically. Honestly, I didn't think it was possible. The team actually has time to focus on the people we care for now."</blockquote>
         <figcaption class="testi-author">
           <div class="testi-avatar" aria-hidden="true">IN</div>
           <div><div class="testi-name">Ibrahim N.</div><div class="testi-role">Manager, Better Life Care, Healthcare</div></div>
@@ -780,7 +768,7 @@
       </figure>
       <figure class="testi-card reveal delay-1">
         <p class="testi-outcome">12+ hours saved monthly on lesson scheduling</p>
-        <blockquote class="testi-quote">"I was losing hours every week playing 'calendar tag' with parents and manually tracking student progress. Optomate built a system that handles my entire booking schedule and student workflows automatically. Now, the moment a student books, everything from the Zoom link to the lesson prep is handled. It's given me my Sundays back."</blockquote>
+        <blockquote class="testi-quote">"I was losing hours every week playing 'calendar tag' with parents and manually tracking student progress. Optomate built a seamless system that handles my entire booking schedule and student workflows automatically. Now, the moment a student books, everything from the Zoom link to the lesson prep is handled. It's given me my Sundays back."</blockquote>
         <figcaption class="testi-author">
           <div class="testi-avatar" aria-hidden="true">KO</div>
           <div><div class="testi-name">Khalid O.</div><div class="testi-role">Maths Teacher, Prime Tuition</div></div>
@@ -788,7 +776,7 @@
       </figure>
       <figure class="testi-card reveal">
         <p class="testi-outcome">Compliance chasing eliminated, audit-ready automatically</p>
-        <blockquote class="testi-quote">"Chasing the team for security sign-offs, policy acknowledgements and access reviews was a full-time job on top of my actual job. Optomate automated the whole cycle: reminders go out, responses get tracked, reports generate themselves. We walked into our last audit completely prepared without me lifting a finger."</blockquote>
+        <blockquote class="testi-quote">"Chasing the team for security sign-offs, policy acknowledgements and access reviews was a full-time job on top of my actual job. Optomate automated the whole cycle — reminders go out, responses get tracked, reports generate themselves. We walked into our last audit completely prepared without me lifting a finger."</blockquote>
         <figcaption class="testi-author">
           <div class="testi-avatar" aria-hidden="true">AL</div>
           <div><div class="testi-name">Ashley L.</div><div class="testi-role">Information Security Manager, Tech &amp; InfoSec</div></div>
@@ -796,7 +784,7 @@
       </figure>
       <figure class="testi-card reveal delay-1">
         <p class="testi-outcome">IT onboarding cut from 4 hours to 20 minutes per new hire</p>
-        <blockquote class="testi-quote">"Every new hire meant hours of manual work across four different systems: accounts, access, tickets, comms. It was chaos and something always got missed. Optomate built us an onboarding workflow that kicks off automatically the moment HR confirms a start date. It's one of those things where you wonder why you didn't do it sooner."</blockquote>
+        <blockquote class="testi-quote">"Every new hire meant hours of manual work across four different systems — accounts, access, tickets, comms. It was chaos and something always got missed. Optomate built us an onboarding workflow that kicks off automatically the moment HR confirms a start date. It's one of those things where you wonder why you didn't do it sooner."</blockquote>
         <figcaption class="testi-author">
           <div class="testi-avatar" aria-hidden="true">AH</div>
           <div><div class="testi-name">Abdul H.</div><div class="testi-role">IT Director, Enterprise Technology</div></div>
@@ -1032,7 +1020,7 @@
   // Turnstile site key is public; it is served by /api/audit because this page has no build step.
   window.onTurnstileLoad = function() {
     fetch('/api/audit').then(r => r.json()).then(d => {
-      if (d.siteKey) turnstileId = turnstile.render('#turnstileWidget', { sitekey: d.siteKey, theme: 'dark' });
+      if (d.siteKey) turnstileId = turnstile.render('#turnstileWidget', { sitekey: d.siteKey, theme: 'light' });
     }).catch(() => {});
   };
   if (contactForm) {

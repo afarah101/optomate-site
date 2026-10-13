@@ -6,133 +6,225 @@
   <title>Privacy Policy — Optomate</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="description" content="How Optomate collects, uses and protects your personal data under UK GDPR.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Geist:wght@400;500;600&display=swap">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:            #080808;
-      --fg:            #f0f0f0;
-      --muted:         #888;
-      --border:        rgba(255,255,255,0.07);
-      --accent:        #7c3aed;
-      --accent-hover:  #6d28d9;
-      --accent-label:  rgba(124,58,237,0.6);
-      --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', system-ui, sans-serif;
-      --font-mono: 'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, monospace;
+      /* Colour */
+      --bg:             #f5f0e8;
+      --surface:        #fbf8f3;
+      --surface-sunk:   #ede6da;
+      --fg:             #2a1f1a;
+      --muted:          #66574c;
+      --line:           rgba(42,31,26,0.10);
+      --line-strong:    rgba(42,31,26,0.20);
+      --accent:         #8a4b2f;
+      --accent-hover:   #733d25;
+      --accent-soft:    rgba(138,75,47,0.10);
+      --on-accent:      #fbf8f3;
+      --on-dark:        #f5f0e8;
+      --on-dark-muted:  rgba(245,240,232,0.72);
+      --on-dark-line:   rgba(245,240,232,0.14);
+      --nav-glass:      rgba(251,248,243,0.78);
+      --error:          #9b2c2c;
+      --error-soft:     rgba(155,44,44,0.08);
+
+      /* Shadows, tinted with the espresso hue */
+      --shadow-sm: 0 1px 2px rgba(60,38,24,0.05), 0 4px 14px -6px rgba(60,38,24,0.10);
+      --shadow-lg: 0 2px 6px rgba(60,38,24,0.04), 0 30px 60px -24px rgba(60,38,24,0.22);
+      --inset-hi:  inset 0 1px 0 rgba(255,255,255,0.65);
+
+      /* Radius: 3 steps */
+      --r-sm:   12px;
+      --r-lg:   28px;
+      --r-pill: 999px;
+
+      /* Type */
+      --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+      --font-sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+      /* Motion */
+      --ease: cubic-bezier(0.32, 0.72, 0, 1);
+      --dur:  450ms;
+      --dur-reveal: 900ms;
+
+      /* Layers */
+      --z-base:  1;
+      --z-nav:   10;
+      --z-noise: 20;
+      --z-skip:  30;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
       color: var(--fg);
       font-family: var(--font-sans);
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.7;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 9999;
-      background: rgba(8,8,8,0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
+    /* Fixed film grain */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-noise);
+      pointer-events: none;
+      opacity: 0.05;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
     }
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-    .nav-logo {
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--fg);
+
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: var(--z-skip);
+      background: var(--fg);
+      color: var(--on-dark);
+      padding: 10px 18px;
+      border-radius: var(--r-pill);
+      font-size: 14px;
       text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 9px;
+      transform: translateY(-200%);
+      transition: transform var(--dur) var(--ease);
     }
+    .skip-link:focus { transform: translateY(0); }
+
+    /* Floating nav */
+    .nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: var(--z-nav);
+      width: min(1100px, calc(100% - 32px));
+      background: var(--nav-glass);
+      backdrop-filter: blur(18px) saturate(1.2);
+      -webkit-backdrop-filter: blur(18px) saturate(1.2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      box-shadow: var(--shadow-sm), var(--inset-hi);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 8px 8px 8px 20px; }
+    .nav-logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-serif); font-size: 20px; color: var(--fg); text-decoration: none; letter-spacing: -0.01em; }
     .nav-logo-mark {
-      width: 26px;
-      height: 26px;
-      background: var(--accent);
-      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--r-pill);
+      background: var(--fg);
+      color: var(--on-dark);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: white;
+      font-size: 14px;
     }
     .btn {
       display: inline-flex;
       align-items: center;
-      padding: 9px 18px;
-      border-radius: 7px;
+      gap: 12px;
+      padding: 6px 6px 6px 18px;
+      border-radius: var(--r-pill);
       font-size: 14px;
       font-weight: 500;
       text-decoration: none;
       white-space: nowrap;
       background: var(--accent);
-      color: white;
-      transition: background 0.15s;
+      color: var(--on-accent);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--dur) var(--ease), background-color var(--dur) var(--ease);
     }
     .btn:hover { background: var(--accent-hover); }
-
-    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
-    main { padding: 72px 0; }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--accent-label);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
+    .btn:active { transform: scale(0.98); }
+    .btn-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--r-pill);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(251,248,243,0.16);
+      transition: transform var(--dur) var(--ease);
     }
-    h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; }
-    .updated { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
-    h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; margin: 40px 0 12px; }
-    p, li { color: #c8c8c8; font-size: 15px; }
-    p + p { margin-top: 12px; }
-    ul { padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
-    a { color: var(--fg); }
-    strong { color: var(--fg); font-weight: 500; }
+    .btn:hover .btn-icon { transform: translate(3px, -1px) scale(1.05); }
 
-    footer { border-top: 1px solid var(--border); padding: 32px 0; }
-    .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .footer-bottom p { font-size: 13px; color: var(--muted); }
+    .container { max-width: 760px; margin: 0 auto; padding: 0 32px; }
+    main { padding: 176px 0 128px; }
+
+    .doc {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 56px;
+    }
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--r-pill);
+      padding: 5px 12px;
+      margin-bottom: 22px;
+    }
+    h1, h2 { font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.02em; text-wrap: balance; }
+    h1 { font-size: clamp(40px, 6vw, 64px); line-height: 1.02; margin-bottom: 14px; }
+    .updated { font-size: 14px; color: var(--muted); margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+    h2 { font-size: 28px; line-height: 1.15; margin: 48px 0 14px; }
+    p, li { color: var(--muted); font-size: 16px; text-wrap: pretty; }
+    p + p { margin-top: 12px; }
+    ul { padding-left: 20px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    li::marker { color: var(--accent); }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    strong { color: var(--fg); font-weight: 600; }
+
+    footer { padding: 0 0 48px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid var(--line); }
+    .footer-bottom p { font-size: 14px; color: var(--muted); }
     .footer-bottom a { color: inherit; text-decoration: none; }
-    .footer-bottom a:hover { color: var(--fg); }
+    .footer-bottom a:hover { color: var(--accent); }
 
     @media (max-width: 768px) {
-      main { padding: 52px 0; }
+      .container { padding: 0 16px; }
+      main { padding: 120px 0 80px; }
+      .doc { padding: 28px; }
+      h2 { font-size: 24px; margin-top: 40px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      :root { --dur: 0ms; }
+      html { scroll-behavior: auto; }
     }
   </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
-<nav>
+<nav class="nav" aria-label="Main">
   <div class="nav-inner">
     <a class="nav-logo" href="/">
-      <div class="nav-logo-mark">O</div>
+      <span class="nav-logo-mark" aria-hidden="true">O</span>
       Optomate
     </a>
-    <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="btn">Book a call →</a>
+    <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" class="btn">Book a call <span class="btn-icon" aria-hidden="true">→</span></a>
   </div>
 </nav>
 
-<main>
+<main id="main">
   <div class="container">
-    <div class="section-label">Legal</div>
+    <article class="doc">
+    <div class="eyebrow">Legal</div>
     <h1>Privacy policy</h1>
     <p class="updated">Last updated: 5 October 2026</p>
 
@@ -196,6 +288,7 @@
 
     <h2>Changes to this policy</h2>
     <p>We may update this policy from time to time. The date at the top shows when it last changed.</p>
+    </article>
   </div>
 </main>
 
