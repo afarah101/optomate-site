@@ -5,23 +5,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Optomate — AI Automation for UK SMBs</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..600&display=swap">
+  <link rel="stylesheet" href="/tokens.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:            #080808;
-      --surface:       #0f0f0f;
-      --surface-2:     #141414;
-      --fg:            #f0f0f0;
-      --muted:         #888;
-      --border:        rgba(255,255,255,0.07);
-      --border-md:     rgba(255,255,255,0.12);
-      --accent:        #7c3aed;
-      --accent-hover:  #6d28d9;
-      --accent-dim:    rgba(124,58,237,0.14);
-      --accent-border: rgba(124,58,237,0.28);
-      --accent-label:  rgba(124,58,237,0.6);
-      --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', system-ui, sans-serif;
+      --bg:            var(--c-bg);
+      --surface:       var(--c-bg-alt);
+      --surface-2:     var(--c-bg-dark);
+      --fg:            var(--c-text);
+      --muted:         var(--c-text-muted);
+      --border:        var(--c-line);
+      --border-md:     var(--c-line-strong);
+      --accent:        var(--c-accent);
+      --accent-hover:  var(--c-accent-hover);
+      --accent-dim:    var(--c-accent-soft);
+      --accent-border: var(--c-line-strong);
+      --accent-label:  var(--c-accent);
+      --font-sans: var(--font-text);
       --font-mono: 'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, monospace;
     }
 
@@ -41,9 +47,9 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(8,8,8,0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: var(--nav-bg);
+      backdrop-filter: var(--nav-blur);
+      -webkit-backdrop-filter: var(--nav-blur);
       border-bottom: 1px solid var(--border);
     }
     .nav-inner {
@@ -77,7 +83,7 @@
       justify-content: center;
       font-size: 12px;
       font-weight: 700;
-      color: white;
+      color: var(--c-on-accent);
       flex-shrink: 0;
     }
     .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
@@ -85,7 +91,7 @@
     .nav-links a:hover { color: var(--fg); }
     .nav-cta { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
     .nav-availability { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); white-space: nowrap; }
-    .nav-availability-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+    .nav-availability-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-accent); flex-shrink: 0; }
 
     .btn {
       display: inline-flex;
@@ -103,10 +109,10 @@
       letter-spacing: 0.01em;
       white-space: nowrap;
     }
-    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary { background: var(--accent); color: var(--c-on-accent); }
     .btn-primary:hover { background: var(--accent-hover); }
     .btn-outline { background: transparent; color: var(--fg); border: 1px solid var(--border-md); }
-    .btn-outline:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.04); }
+    .btn-outline:hover { border-color: var(--c-text-muted); background: var(--c-line); }
 
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
     section { padding: 72px 0; }
@@ -140,7 +146,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.55);
+      background: var(--c-bg-dark); opacity: 0.55;
       z-index: 1;
     }
     .hero > .container {
@@ -177,13 +183,13 @@
     }
     .hero-actions .btn { font-size: 15px; padding: 11px 22px; }
     .hero-trust { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-    .hero-trust span { text-decoration: underline; text-decoration-color: rgba(255,255,255,0.2); text-underline-offset: 3px; }
-    .hero-trust-sub { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 32px; line-height: 1.4; }
+    .hero-trust span { text-decoration: underline; text-decoration-color: var(--c-text-muted); text-underline-offset: 3px; }
+    .hero-trust-sub { font-size: 12px; color: var(--c-text-muted); margin-bottom: 32px; line-height: 1.4; }
     .hero-stats {
       display: flex;
       gap: 48px;
       padding-top: 28px;
-      border-top: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid var(--c-line);
       justify-content: center;
       flex-wrap: wrap;
     }
@@ -197,12 +203,12 @@
     @keyframes scroll-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
     .powered-strip { padding: 24px 0; border-bottom: 1px solid var(--border); }
-    .powered-label { text-align: center; font-size: 11px; color: rgba(255,255,255,0.28); font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
+    .powered-label { text-align: center; font-size: 11px; color: var(--c-text-muted); font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; }
     .powered-row { display: flex; align-items: center; justify-content: center; gap: 44px; flex-wrap: wrap; }
     .powered-item { display: flex; align-items: center; gap: 7px; opacity: 0.3; transition: opacity 0.2s; filter: grayscale(1); }
     .powered-item:hover { opacity: 0.55; }
     .powered-icon { width: 18px; height: 18px; flex-shrink: 0; }
-    .powered-name { font-size: 13px; font-weight: 500; color: #fff; letter-spacing: -0.01em; }
+    .powered-name { font-size: 13px; font-weight: 500; color: var(--c-text); letter-spacing: -0.01em; }
 
     .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 40px; }
     .svc-card { background: var(--surface); padding: 32px; transition: background 0.2s; }
@@ -211,7 +217,7 @@
     .svc-card h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 9px; }
     .svc-card p { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 360px; }
     .svc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-    .svc-tag { font-size: 11px; font-family: var(--font-mono); color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+    .svc-tag { font-size: 11px; font-family: var(--font-mono); color: var(--muted); background: var(--c-line); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
 
     .process-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .process-header { max-width: 540px; margin-bottom: 44px; }
@@ -238,14 +244,14 @@
     .price-divider { height: 1px; background: var(--border); margin-bottom: 20px; }
     .price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
     .price-features li { font-size: 14px; color: var(--muted); display: flex; align-items: flex-start; gap: 9px; line-height: 1.45; }
-    .price-features li::before { content: '✓'; color: rgba(124,58,237,0.75); flex-shrink: 0; font-size: 13px; margin-top: 1px; }
+    .price-features li::before { content: '✓'; color: var(--c-accent); flex-shrink: 0; font-size: 13px; margin-top: 1px; }
     .price-cta { display: block; text-align: center; padding: 11px; border-radius: 7px; font-size: 14px; font-weight: 500; text-decoration: none; transition: all 0.15s; border: 1px solid var(--border-md); color: var(--fg); }
-    .price-cta:hover { background: rgba(255,255,255,0.05); }
-    .price-card.featured .price-cta { background: var(--accent); border-color: transparent; color: white; }
+    .price-cta:hover { background: var(--c-line); }
+    .price-card.featured .price-cta { background: var(--accent); border-color: transparent; color: var(--c-on-accent); }
     .price-card.featured .price-cta:hover { background: var(--accent-hover); }
     .price-onboarding { text-align: center; font-size: 11px; color: var(--muted); margin-top: 10px; }
-    .pricing-urgency { text-align: center; margin-top: 18px; font-size: 13px; color: var(--muted); padding: 10px 16px; border: 1px solid var(--border); border-radius: 6px; background: rgba(124,58,237,0.04); }
-    .pricing-urgency strong { color: #e0d0ff; font-weight: 500; }
+    .pricing-urgency { text-align: center; margin-top: 18px; font-size: 13px; color: var(--muted); padding: 10px 16px; border: 1px solid var(--border); border-radius: 6px; background: var(--c-accent-soft); }
+    .pricing-urgency strong { color: var(--c-text); font-weight: 500; }
     .pricing-footnote { text-align: center; margin-top: 14px; font-size: 13px; color: var(--muted); }
     .pricing-footnote a { color: var(--accent); text-decoration: none; }
     .pricing-footnote a:hover { text-decoration: underline; }
@@ -254,10 +260,10 @@
     .testi-header p { color: var(--muted); margin-top: 12px; max-width: 440px; }
     .testi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
     .testi-card { background: var(--surface); padding: 28px; display: flex; flex-direction: column; }
-    .testi-outcome { display: inline-block; background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; border-radius: 20px; padding: 3px 10px; margin-bottom: 14px; align-self: flex-start; }
-    .testi-quote { font-size: 15px; line-height: 1.68; color: #c8c8c8; margin-bottom: 22px; flex: 1; }
+    .testi-outcome { display: inline-block; background: var(--accent); color: var(--c-on-accent); font-size: 12px; font-weight: 600; border-radius: 20px; padding: 3px 10px; margin-bottom: 14px; align-self: flex-start; }
+    .testi-quote { font-size: 15px; line-height: 1.68; color: var(--c-text); margin-bottom: 22px; flex: 1; }
     .testi-author { display: flex; align-items: center; gap: 10px; }
-    .testi-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); border: 1px solid var(--accent-border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #a78bfa; flex-shrink: 0; }
+    .testi-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-dim); border: 1px solid var(--accent-border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--c-link); flex-shrink: 0; }
     .testi-name { font-size: 14px; font-weight: 500; }
     .testi-role { font-size: 12px; color: var(--muted); margin-top: 1px; }
 
@@ -269,9 +275,9 @@
     .faq-item { border-bottom: 1px solid var(--border); }
     .faq-item:last-child { border-bottom: none; }
     .faq-q { width: 100%; background: none; border: none; color: var(--fg); font-family: var(--font-sans); font-size: 14px; font-weight: 500; text-align: left; padding: 17px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: background 0.15s; }
-    .faq-q:hover { background: rgba(255,255,255,0.025); }
+    .faq-q:hover { background: var(--c-line); }
     .faq-toggle { flex-shrink: 0; width: 20px; height: 20px; border: 1px solid var(--border-md); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--muted); transition: all 0.15s; line-height: 1; }
-    .faq-item.open .faq-toggle { background: var(--accent-dim); border-color: var(--accent-border); color: #a78bfa; }
+    .faq-item.open .faq-toggle { background: var(--accent-dim); border-color: var(--accent-border); color: var(--c-link); }
     .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.28s ease; }
     .faq-a-inner { padding: 0 20px 16px; font-size: 14px; color: var(--muted); line-height: 1.7; }
 
@@ -281,7 +287,7 @@
     .cta-section p { color: var(--muted); font-size: 16px; line-height: 1.6; margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
     .cta-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
     .cta-btns .btn { font-size: 15px; padding: 12px 26px; }
-    .cta-sub { margin-top: 14px; font-size: 13px; color: rgba(255,255,255,0.32); }
+    .cta-sub { margin-top: 14px; font-size: 13px; color: var(--c-text-muted); }
 
     .contact-section { padding: 72px 0; border-top: 1px solid var(--border); }
     .contact-header { max-width: 520px; margin-bottom: 40px; }
@@ -293,7 +299,7 @@
     .contact-card-label { font-size: 11px; color: var(--muted); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
     .contact-card-value { font-size: 15px; font-weight: 500; color: var(--fg); }
     .contact-card-value a { color: var(--fg); text-decoration: none; }
-    .contact-card-value a:hover { color: #a78bfa; }
+    .contact-card-value a:hover { color: var(--c-link); }
     .contact-book { margin-bottom: 32px; }
     .contact-book p { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
     .contact-form-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 36px; }
@@ -322,9 +328,9 @@
     .form-checkbox-item { display: flex; align-items: center; gap: 9px; cursor: pointer; }
     .form-checkbox-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
     .form-checkbox-item span { font-size: 14px; color: var(--muted); }
-    .form-submit { background: var(--accent); color: white; border: none; border-radius: 7px; padding: 11px 24px; font-size: 14px; font-weight: 500; font-family: var(--font-sans); cursor: pointer; transition: background 0.15s; }
+    .form-submit { background: var(--accent); color: var(--c-on-accent); border: none; border-radius: 7px; padding: 11px 24px; font-size: 14px; font-weight: 500; font-family: var(--font-sans); cursor: pointer; transition: background 0.15s; }
     .form-submit:hover { background: var(--accent-hover); }
-    .form-success { display: none; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 7px; padding: 16px 20px; font-size: 14px; color: #c4b5fd; margin-top: 16px; line-height: 1.6; }
+    .form-success { display: none; background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 7px; padding: 16px 20px; font-size: 14px; color: var(--c-link); margin-top: 16px; line-height: 1.6; }
 
     footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 36px; }
@@ -367,16 +373,69 @@
       .footer-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 36px; }
     }
+
+    /* ─── Optomate tokens: nav, buttons, tiles, hero (match index.html) ─── */
+    body { font-family: var(--font-text); font-size: var(--fs-body); line-height: var(--lh-body); letter-spacing: var(--ls-body); background: var(--c-bg); color: var(--c-text); }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 600; letter-spacing: var(--ls-hero); }
+    .container { max-width: calc(var(--content-max) + 64px); }
+    section { padding: var(--section-pad); background: var(--c-bg); }
+    body > section:nth-of-type(odd) { background: var(--c-bg); }
+    body > section:nth-of-type(even) { background: var(--c-bg-alt); }
+    nav { position: sticky; top: 0; height: var(--nav-height); background: var(--nav-bg); backdrop-filter: var(--nav-blur); -webkit-backdrop-filter: var(--nav-blur); border-bottom: 1px solid var(--c-line); }
+    .nav-inner { height: 100%; max-width: var(--content-max); margin: 0 auto; padding-top: 0; padding-bottom: 0; }
+    .nav-links a, .nav-book { font-size: var(--fs-micro); }
+    .btn, .price-cta, .form-submit { border-radius: var(--radius-pill); }
+    .btn-primary, .form-submit, .price-card.featured .price-cta { background: var(--c-accent); color: var(--c-on-accent); border: 1px solid var(--c-accent); }
+    .btn-primary:hover, .form-submit:hover, .price-card.featured .price-cta:hover { background: var(--c-accent-hover); border-color: var(--c-accent-hover); }
+    .btn-outline, .price-cta { background: transparent; color: var(--c-link); border: 1px solid var(--c-link); }
+    .btn-outline:hover, .price-cta:hover { background: var(--c-accent-soft); border-color: var(--c-link); }
+    .svc-card, .process-step, .price-card, .testi-card, .contact-card, .contact-form-wrap { background: var(--c-bg-alt); border: 0; box-shadow: none; border-radius: var(--radius-lg); }
+    body > section:nth-of-type(even) .svc-card, body > section:nth-of-type(even) .process-step,
+    body > section:nth-of-type(even) .price-card:not(.featured), body > section:nth-of-type(even) .testi-card,
+    body > section:nth-of-type(even) .contact-card, body > section:nth-of-type(even) .contact-form-wrap { background: var(--c-bg); }
+    .price-card.featured { background: var(--c-bg-dark); color: var(--c-text-on-dark); }
+    .price-card.featured .price-tier, .price-card.featured .price-prefix, .price-card.featured .price-period,
+    .price-card.featured .price-reframe, .price-card.featured .price-features li, .price-card.featured .price-onboarding { color: var(--c-on-dark-muted); }
+    .price-card.featured .price-amount, .price-card.featured .price-amount-talk { color: var(--c-text-on-dark); }
+    .price-card.featured .price-divider { background: var(--c-on-dark-line); border-color: var(--c-on-dark-line); }
+    .price-card.featured .price-features li::before { color: var(--c-link-on-dark); }
+    .hero h1 { font-size: var(--fs-hero); line-height: var(--lh-hero); letter-spacing: var(--ls-hero); font-weight: 600; }
+    .hero-sub { font-size: var(--fs-body); }
+    .hero-glow { display: none; }
+    .tool-logo, .powered-item { opacity: 1; filter: none; color: var(--c-text); }
+    .section-label { color: var(--c-accent); }
+    body > section.cta-section { background: var(--c-bg-dark); color: var(--c-text-on-dark); }
+    .cta-section h2 { color: var(--c-text-on-dark); }
+    .cta-section p, .cta-section .cta-sub { color: var(--c-on-dark-muted); }
+    .cta-section .btn-outline { color: var(--c-link-on-dark); border-color: var(--c-link-on-dark); }
+    .cta-section a:not(.btn) { color: var(--c-link-on-dark); }
+    .price-card.featured .price-badge { color: var(--c-link-on-dark); background: transparent; border-color: var(--c-on-dark-line); }
+    .price-card.featured p[style] { color: var(--c-on-dark-muted) !important; }
+    .cta-section .section-label { color: var(--c-link-on-dark); }
+    .pricing-urgency, .svc-tag { background: transparent; }
+    .price-badge, .section-label, .svc-tag { font-size: var(--fs-micro); }
+    .services-grid, .process-steps, .pricing-grid, .testi-grid { gap: var(--tile-gap); background: transparent; border: 0; overflow: visible; }
+    .hero-inner { max-width: 780px; margin: 0 auto; text-align: center; }
+    .hero-inner .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-inner .hero-actions, .hero-stats { justify-content: center; }
+    .hero-stats { text-align: center; }
+    @media (max-width: 734px) { .hero h1 { font-size: var(--fs-h3); line-height: var(--lh-h3); } }
+    .hero:has(.hero-video) h1, .hero:has(.hero-video) .hero-word { color: var(--c-text-on-dark); }
+    .hero:has(.hero-video) .hero-sub, .hero:has(.hero-video) .hero-trust, .hero:has(.hero-video) .hero-trust-sub,
+    .hero:has(.hero-video) .stat-label { color: var(--c-on-dark-muted); }
+    .hero:has(.hero-video) .stat-val { color: var(--c-text-on-dark); }
+    .hero:has(.hero-video) .btn-outline { color: var(--c-link-on-dark); border-color: var(--c-link-on-dark); }
+
+    /* ─── Integrated logo: mark replaces the "O" ─── */
+    .logo { display: inline-flex; align-items: baseline; gap: 0; font-family: var(--font-text); font-size: var(--fs-body); font-weight: 600; letter-spacing: -0.02em; line-height: 1; color: var(--c-text); text-decoration: none; }
+    .logo-mark { flex: none; width: 0.94em; height: 0.94em; position: relative; top: calc(0.94em * 0.11); margin-right: -0.02em; }
   </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-inner">
-    <a class="nav-logo" href="#">
-      <div class="nav-logo-mark">O</div>
-      Optomate
-    </a>
+    <a class="logo nav-logo" href="/" aria-label="Optomate"><svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16" fill="none" stroke="#1d1d1f" stroke-width="5.5"/><circle cx="35.3" cy="12.7" r="6" fill="#4f46e5" stroke="#f5f5f7" stroke-width="3"/></svg><span aria-hidden="true">ptomate</span></a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
       <li><a href="#process">How it works</a></li>
@@ -453,22 +512,22 @@
     <div class="powered-row">
       <div class="powered-item">
         <svg class="powered-icon" viewBox="0 0 18 18" fill="none">
-          <path d="M9 2C5.13 2 2 5.13 2 9s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 12.5c-3.03 0-5.5-2.47-5.5-5.5S5.97 3.5 9 3.5s5.5 2.47 5.5 5.5-2.47 5.5-5.5 5.5z" fill="white"/>
-          <circle cx="9" cy="9" r="2.5" fill="white"/>
+          <path d="M9 2C5.13 2 2 5.13 2 9s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 12.5c-3.03 0-5.5-2.47-5.5-5.5S5.97 3.5 9 3.5s5.5 2.47 5.5 5.5-2.47 5.5-5.5 5.5z" fill="currentColor"/>
+          <circle cx="9" cy="9" r="2.5" fill="currentColor"/>
         </svg>
         <span class="powered-name">Claude</span>
       </div>
       <div class="powered-item">
         <svg class="powered-icon" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="2" width="14" height="14" rx="3" stroke="white" stroke-width="1.4"/>
-          <path d="M5.5 9h7M9 5.5v7" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+          <rect x="2" y="2" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M5.5 9h7M9 5.5v7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
         <span class="powered-name">ChatGPT</span>
       </div>
       <div class="powered-item">
         <svg class="powered-icon" viewBox="0 0 18 18" fill="none">
-          <polygon points="9,2 16,14 2,14" stroke="white" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
-          <circle cx="9" cy="11" r="1.5" fill="white"/>
+          <polygon points="9,2 16,14 2,14" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/>
+          <circle cx="9" cy="11" r="1.5" fill="currentColor"/>
         </svg>
         <span class="powered-name">Gemini</span>
       </div>
@@ -792,7 +851,7 @@
         <button type="submit" class="form-submit">Send my free analysis →</button>
       </form>
       <div class="form-success" id="formSuccess">
-        Thanks! Your analysis is on the way. Want to skip the wait? <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" style="color:#a78bfa;text-decoration:underline;">Book your discovery call here</a>
+        Thanks! Your analysis is on the way. Want to skip the wait? <a href="https://calendar.app.google/6qkxdLDFYkce58QX7" target="_blank" rel="noopener" style="color:var(--c-link);text-decoration:underline;">Book your discovery call here</a>
       </div>
     </div>
   </div>
@@ -802,10 +861,7 @@
   <div class="container">
     <div class="footer-grid">
       <div>
-        <a class="nav-logo" href="#">
-          <div class="nav-logo-mark">O</div>
-          Optomate
-        </a>
+        <a class="logo" href="/" aria-label="Optomate"><svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16" fill="none" stroke="#1d1d1f" stroke-width="5.5"/><circle cx="35.3" cy="12.7" r="6" fill="#4f46e5" stroke="#fff" stroke-width="3"/></svg><span aria-hidden="true">ptomate</span></a>
         <p class="footer-brand-desc">We build automation systems for businesses that are done doing things manually.</p>
       </div>
       <div class="footer-col">
